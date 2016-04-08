@@ -15,7 +15,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
 
 		<link rel="stylesheet" href="css/reveal.css">
-		<link rel="stylesheet" href="css/theme/black.css" id="theme">
+		<link rel="stylesheet" href="css/theme/beige.css" id="theme">
 
 		<!-- Code syntax highlighting -->
 		<link rel="stylesheet" href="lib/css/zenburn.css">
@@ -41,18 +41,228 @@
 			<!-- Any section element inside of this container is displayed as a slide -->
 			<div class="slides">
 				<section>
-					<h1>Reveal.js</h1>
-					<h3>The HTML Presentation Framework</h3>
+					<h1>Distributed Processing &amp; Spark</h1>
+					<h4>A **growing** Data Science Perspective</h4>
+          <img src='img/salt.png' alt='joke'>
 					<p>
-						<small>Created by <a href="http://hakim.se">Hakim El Hattab</a> / <a href="http://twitter.com/hakimel">@hakimel</a></small>
+						<small>Created by <a href="http://pedalproject.com" target='_blank'>Brian Lehman</a> / <a target='_blank' href="http://twitter.com/BrianLehman">@BrianLehman</a></small>
 					</p>
-				</section>
+          <aside class="notes">
+          </aside>
 
+				</section>
+        <section>
+          <h2>Google Trends</h2>
+          <script type="text/javascript" src="//www.google.com/trends/embed.js?hl=en-US&q=/m/0r4s2l1,+/m/0ndhxqz,+/m/05pp4x&cmpt=q&tz=Etc/GMT%2B6&tz=Etc/GMT%2B6&content=1&cid=TIMESERIES_GRAPH_0&export=5&w=500&h=400"></script>
+          <ul>
+            <li>What problem/solution motivated this trend?</li>
+          </ul>
+          <aside class="notes">
+1.) Distributed Processing of data... Machine Learning
+2.) Different PBS in that the nodes can communicate mid process. (@Kolb)
+3.) A mapper (just a function) - runs a process on a single node. (ABSENT: communication protcal)
+4.) RDD (Resilient Distributed Dataset) (interface that surfaces shared information). 
+1.) The reason Spark was created is so you could do ML on data that will not fit into memory.
+2.) http://www.edureka.co/blog/apache-spark-vs-hadoop-mapreduce - speak to the logistic regression power
+3.) Before Spark
+Pregel - graph processing
+Storm - realtime stream processing
+Hive &amp; Pig - sql like query engines
+...chain these technologies together to use them all.
+Now spark can generalize all of this in the RDD paradigm and provide Graph sql, ML, stream processing, and graph processing.
+
+          </aside>
+        </section>
+
+       <section>
+          <h2>Performance</h2>
+          <h4>How can we improve distributed processing?</h4>
+          <a href='http://bl.ocks.org/mlunacek/raw/6590169/' target='_blank'><img src='img/LoadBalancing.png' alt='monteD3' width=500 ></a>
+          <aside class="notes">
+            1.) How to use a fix set of processors to minimize the total time to completion of a bunch of sub processes that could fail. 
+            2.) There's lots of things that have solve these problems! 
+          </aside>
+        </section>
+        <section>
+            <h2>Spark's locale</h2>
+            <p>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/QAvE0bplL_Y" frameborder="0" allowfullscreen></iframe>
+            </p>
+          <aside class="notes">
+          </aside>
+        </section>
+
+         <section>
+            <h2>Spark &amp; Alternatives (Part I)</h2>
+            <p>
+                <img src='img/MTC.svg' width=500 alt='MTC'/>
+            </p>
+            <p>
+            Details explained in:
+            </p>
+              <ul>
+                <li>Monte Lunacek's <a href="http://researchcomputing.github.io/meetup_spring_2014/python/spark.html" target='_blank'>talk</a></li>
+                <li>This <a href='http://datasys.cs.iit.edu/publications/2009_PhD-UChicago_dissertation.pdf' target='_blank'>long paper.</a></li>
+              </ul>
+          <aside class="notes">
+1.) HPC - High Performance Computer (many computers - super computer) 
+      Example: climate models where the dependencies require commuinication among many threads.
+    HTC - High-throughput computing (HTC) is a computer science term to describe the use of many computing resources over long periods of time to accomplish a computational task.
+    MPI - Message Passing Interface
+          </aside>
+        </section>
+        <section>
+            <h2>Spark &amp; Alternatives (Part II)</h2>
+            <p>
+                <img src='img/overview.png' width=500 alt='MTC'/>
+            </p>
+            <ul>
+              <li>Spark is a highly flexible process.</li>
+            </ul>
+        </section>
+
+<!-- http://0x0fff.com/spark-misconceptions/
+  Notes: 
+
+
+
+-->
+        <section>
+        <h2> Least Recently Used (LRU) Algorithm</h2>
+                <img src='img/LRU.png' alt='LRU'/>
+
+        </section>
+
+  <section>
+						<h2>Spark Motivation</h2>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/qf2IxHzueXA" frameborder="0" allowfullscreen></iframe>
+            <ul>
+                <li>Lazy Computation: optimizes the job before executing (re-order joins, ect.).</li>
+                <li>In-memory intermediate data caching: LRU. </li>
+                <li>Efficient pipelining: efficiently avoids hitting the HDD.</li>
+                <li>*RDD: collection of data items split into partitions and stored in memory on worker nodes on the clusters</li>
+            </ul>
+            <aside class="notes">
+              3:30 &amp; 
+             <ul>
+                <li> RDD - is an interface for data transformation and does not have any data in it.</li>
+                <li> RDD - stores reference to the partitians that can reference a specific cache item.</li>
+                <li> RDD - stores reference to the dependencies for the parent RDDs involment with the partition.</li>
+                <li> RDD - partitions are set of data splits associated with the RDD.</li>
+                <li> RDD - a dataframe has an RDD inside of it because this is the most basic unit in Spark.</li>
+                <li> RDD - a join, union, intersection is just making RDDs depend on other RDDs.</li>
+                <li> DAG - Direct Acyclic Graph.</li>
+                <li> Node - RDD partition.</li>
+                <li> Edge - transformation on top of data.</li>
+                <li> Acyclic - graph cannot return to older partition.</li>
+                <li> Acyclic - each partition is immutable.</li>
+                <li> Direct - data is transfered from one partition to another, but cannot go back.</li>
+             </ul>
+          </aside>
+        </section>
+        <section>
+          <h2><a href="http://0x0fff.com/spark-misconceptions/" target='_blank'>*Potential misconceptions:</a></h2>
+          <ul>
+            <li>Spark is an entirely in-memory technology.</li>
+            <li>Spark always performs 10x-100x faster than Hadoop.</li>
+            <li>Spark introduces completely new approach for data processing on the market.</li>
+          </ul>
+          <aside class="notes">
+1.) Spark is an in-memory technology: It is the technology that allows you to efficiently utilize in-memory LRU cache with possible on-disk eviction on memory full condition. The LRU is a "smart" algorithm that tries to manage the cache by throwing away the Least Recently Used items.
+2.) You may not need Spark's speed. MapReduce's processing style can be just fine if your data operations and reporting requirements are mostly static and you can wait for batch-mode processing. But if you need to do analytics on streaming data, like from sensors on a factory floor, or have applications that require multiple operations, you probably want to go with Spark. Most machine-learning algorithms, for example, require multiple operations. Common applications for Spark include real-time marketing campaigns, online product recommendations, cybersecurity analytics and machine log monitoring.
+3.) 
+          </aside>
+        </section>
+
+        <section>
+          <h2>Example Code</h2>
+					<pre><code class="hljs" data-trim contenteditable>
+import json
+
+infile = sc.textFile("s3n://2016-04-07.CU.lecture/test.data")
+json_data = data.map(lambda x: json.loads(x))
+parsed_text = json_data.flatMap(lambda x: x['body'].lower().split())
+counts = parsed_text.map(lambda x: (x,1)).reduceByKey(lambda x,y: x+y)
+sorted_counts = counts.sortByKey(ascending=False)
+
+					</code></pre>
+        </section>
+        <section>
+						<h2>Wordcount in Mapreduce</h2>
+            <img src="img/mapreduce_word_count.png" width=600 alt='Spark-Memory-Management'>
+            <p>
+            Pulling in data, we see that each transformation creates a new RDD.
+            </p>
+          <aside class="notes">
+          </aside>
+        </section>
+        <section>
+						<h2>Additional functionality in Spark</h2>
+            <img src="img/spark_extras.png" width=600 alt='Spark-Memory-Management'>
+          <aside class="notes">
+          </aside>
+        </section>
+        <section>
+          <h2>Logistic Regression</h2>
+            <img src="img/logisitic_regression.png" width=600 alt='LogisticRegression'>
+        </section>
+        <section>
+In general, Spark is faster than MapReduce because of:
+<ul>
+  <li>Faster task startup time.</li> 
+  <li>Faster shuffles.</li>
+  <li>Faster workflows.</li> 
+  <li>Caching.</li>
+</ul>
+          <aside class="notes">
+1. Spark forks the thread, MR brings up a new JVM
+2. Spark puts the data on HDDs only once during shuffles, MR does it twice.
+3. Typical MR workflow is a series of MR jobs, each of which persists data to HDFS between iterations. Spark supports DAGs and pipelining, which allows it to execute complex workflows without intermediate data materialization (unless you need to “shuffle” it)
+4. It is doubtful because at the moment HDFS can also utilize the cache, but in general Spark cache is quite good, especially its SparkSQL part that caches the data in optimized column-oriented form
+5. ENDING NOTE: All of these gives Spark good performance boost compared to Hadoop, which can really be up to 100x for short-running jobs, but for real production workloads it won’t exceed 2.5x – 3x at most.
+         </aside>
+        </section>
+        <section>
+          <h1>THANKS!</h1>
+          <br></br>
+          <h1>Questions?</h1>
+        </section>
+        </section>
+        <section>
+        <h2> Spark In Action </h2>
+        <p>Actions - return values
+        <ul>
+          <li>collect</li>
+          <li>reduce</li>
+          <li>take</li>
+          <li>count</li>
+        </ul>
+        </p>
+        <p>Transformations return pointers to new RDDs
+        <ul>
+          <li>map, flatmap</li>
+          <li>reduceByKey</li>
+          <li>filter</li>
+          <li>glom</li>
+        </ul>
+        </p>
+          <aside class="notes">
+          </aside>
+        </section>
+        <section>
+						<h2>Spark Architecture</h2>
+            <img src="img/Spark-Memory-Management-1.6.0-768x808.png" width=500 alt='Spark-Memory-Management'>
+        </section>
+        <section>
+          <p>Test</p>
+        </section>
 				<section>
 					<h2>Hello There</h2>
 					<p>
 						reveal.js enables you to create beautiful interactive slide decks using HTML. This presentation will show you examples of what it can do.
 					</p>
+          <aside class="notes">
+          </aside>
 				</section>
 
 				<!-- Example of nested vertical slides -->
@@ -65,10 +275,14 @@
 						<a href="#" class="navigate-down">
 							<img width="178" height="238" data-src="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" alt="Down arrow">
 						</a>
+          <aside class="notes">
+          </aside>
 					</section>
 					<section>
 						<h2>Basement Level 1</h2>
 						<p>Nested slides are useful for adding additional detail underneath a high level horizontal slide.</p>
+          <aside class="notes">
+          </aside>
 					</section>
 					<section>
 						<h2>Basement Level 2</h2>
@@ -77,6 +291,8 @@
 						<a href="#/2">
 							<img width="178" height="238" data-src="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" alt="Up arrow" style="transform: rotate(180deg); -webkit-transform: rotate(180deg);">
 						</a>
+          <aside class="notes">
+          </aside>
 					</section>
 				</section>
 
@@ -87,6 +303,8 @@
 					</p>
 				</section>
 
+          <aside class="notes">
+          </aside>
 				<section>
 					<h2>Point of View</h2>
 					<p>
@@ -95,6 +313,8 @@
 					<p>
 						Hold down alt and click on any element to zoom in on it using <a href="http://lab.hakim.se/zoom-js">zoom.js</a>. Alt + click anywhere to zoom back out.
 					</p>
+          <aside class="notes">
+          </aside>
 				</section>
 
 				<section>
@@ -383,7 +603,6 @@ Reveal.addEventListener( 'customevent', function() {
 		<script src="js/reveal.js"></script>
 
 		<script>
-
 			// Full list of configuration options available at:
 			// https://github.com/hakimel/reveal.js#configuration
 			Reveal.initialize({
@@ -391,9 +610,7 @@ Reveal.addEventListener( 'customevent', function() {
 				progress: true,
 				history: true,
 				center: true,
-
 				transition: 'slide', // none/fade/slide/convex/concave/zoom
-
 				// Optional reveal.js plugins
 				dependencies: [
 					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
@@ -404,7 +621,6 @@ Reveal.addEventListener( 'customevent', function() {
 					{ src: 'plugin/notes/notes.js', async: true }
 				]
 			});
-
 		</script>
 
 	</body>
